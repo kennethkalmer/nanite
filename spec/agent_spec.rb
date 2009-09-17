@@ -186,7 +186,12 @@ describe "Agent:" do
       agent.tags.should include("sample_tag_1")
       agent.tags.should include("sample_tag_2")
     end
-
+    
+    it "for threadpool_size" do
+      agent = Nanite::Agent.start(:threadpool_size => 5)
+      agent.dispatcher.evmclass.threadpool_size.should == 5
+    end
+    
   end
   
   describe "Security" do
@@ -197,8 +202,8 @@ describe "Agent:" do
       @amq = mock("AMQueue", :queue => mock("queue", :subscribe => {}, :publish => {}), :fanout => mock("fanout", :publish => nil))
       MQ.stub!(:new).and_return(@amq)
       serializer = Nanite::Serializer.new
-      @request = serializer.dump(Nanite::Request.new('/foo/bar', ''))
-      @push = serializer.dump(Nanite::Push.new('/foo/bar', ''))
+      @request = Nanite::Request.new('/foo/bar', '')
+      @push = Nanite::Push.new('/foo/bar', '')
       @agent = Nanite::Agent.start
     end
     

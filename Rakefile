@@ -8,9 +8,9 @@ rescue LoadError
   require 'rake/rdoctask'
 end
 require 'rake/clean'
+require 'lib/nanite'
 
 GEM = "nanite"
-VER = "0.4.0"
 AUTHOR = "Ezra Zygmuntowicz"
 EMAIL = "ezra@engineyard.com"
 HOMEPAGE = "http://github.com/ezmobius/nanite"
@@ -19,8 +19,9 @@ SUMMARY = "self assembling fabric of ruby daemons"
 Dir.glob('tasks/*.rake').each { |r| Rake.application.add_import r }
 
 spec = Gem::Specification.new do |s|
+
   s.name = GEM
-  s.version = ::VER
+  s.version = Nanite::VERSION
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "LICENSE", 'TODO']
@@ -43,8 +44,10 @@ Rake::GemPackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
 end
 
+task :default => :spec
+
 task :install => [:package] do
-  sh %{sudo gem install pkg/#{GEM}-#{VER}}
+  sh %{sudo gem install pkg/#{GEM}-#{Nanite::VERSION}}
 end
 
 desc "Run unit specs"
